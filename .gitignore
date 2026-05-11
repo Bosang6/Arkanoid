@@ -1,0 +1,96 @@
+# =========================
+# Visual Studio / MSBuild
+# =========================
+
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio generated files
+*.VC.db
+*.VC.VC.opendb
+*.opendb
+*.ipch
+*.aps
+*.ncb
+*.sdf
+*.cachefile
+*.opensdf
+*.tlog
+*.lastbuildstate
+*.recipe
+*.ilk
+*.idb
+*.pdb
+*.obj
+*.pch
+*.res
+*.exp
+*.lib
+*.dll
+*.exe
+
+# Keep source-controlled external libraries if you intentionally vendor them.
+# Otherwise ignore local dependency folders:
+packages/
+.vcpkg/
+vcpkg_installed/
+
+# CMake, if you use it later
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+out/
+
+# =========================
+# DirectX / shader outputs
+# =========================
+
+# Compiled shader objects
+*.cso
+
+# Optional: ignore generated shader debug/intermediate files
+*.hlsl.cache
+*.shadercache
+
+# =========================
+# OS files
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Editor files
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# Temporary files
+# =========================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.log
