@@ -6,7 +6,7 @@ SpriteShader::~SpriteShader()
     Shutdown();
 }
 
-bool SpriteShader::Initialize(ID3D11Device* device, HWND hwnd, const wchar_t* vsFilename, const wchar_t* psFilename)
+bool SpriteShader::Initialize(ID3D11Device* device, const wchar_t* vsFilename, const wchar_t* psFilename)
 {
     // vertex shader
     bool result = ResourceManager::LoadVertexShader(
@@ -147,10 +147,13 @@ bool SpriteShader::SetParameters(
 
     context->Unmap(m_matrixBuffer.Get(), 0);
 
-    context->VSSetConstantBuffers(0, 1, m_matrixBuffer.GetAddressOf());
+    ID3D11Buffer* matrixBuffer = m_matrixBuffer.Get();
+    context->VSSetConstantBuffers(0, 1, &matrixBuffer);
 
     context->PSSetShaderResources(0, 1, &texture);
-    context->PSSetSamplers(0, 1, &m_samplerState);
+
+    ID3D11SamplerState* samplerState = m_samplerState.Get();
+    context->PSSetSamplers(0, 1, &samplerState);
 
     return true;
 }

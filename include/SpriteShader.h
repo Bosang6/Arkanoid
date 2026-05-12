@@ -11,7 +11,7 @@ public:
     SpriteShader() = default;
     ~SpriteShader();
 
-    bool Initialize(ID3D11Device* device, HWND hwnd, const wchar_t* vsFilename, const wchar_t* psFilename);
+    bool Initialize(ID3D11Device* device, const wchar_t* vsFilename, const wchar_t* psFilename);
     void Shutdown();
 
     bool SetParameters(
