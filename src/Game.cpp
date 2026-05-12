@@ -26,6 +26,22 @@ bool Game::Initialize(
         return false;
     }
 
+    // 3. 初始化 GameObject
+    m_block.SetName("Block");
+    m_block.SetActive(true);
+
+    m_block.GetTransform().position = { 0.0f, 0.0f };
+    m_block.GetTransform().rotation = 0.0f;
+    m_block.GetTransform().scale = { 256.0f, 256.0f };
+
+    ID3D11ShaderResourceView* blockTexture =
+        ResourceManager::GetTextureSRV("block");
+
+    if (!blockTexture)
+        return false;
+
+    m_block.AddSprite(blockTexture);
+
     return true;
 }
 
@@ -69,15 +85,22 @@ bool Game::Render(
         往右 x 增加
         往下 y 增加
     */
-    m_spriteRenderer.DrawSprite(
+    //m_spriteRenderer.DrawSprite(
+    //    context,
+    //    viewMatrix,
+    //    projectionMatrix,
+    //    "block",
+    //    0.0f,
+    //    0.0f,
+    //    256.0f,
+    //    256.0f
+    //);
+
+    m_spriteRenderer.Draw(
         context,
+        m_block,
         viewMatrix,
-        projectionMatrix,
-        "block",
-        0.0f,
-        0.0f,
-        256.0f,
-        256.0f
+        projectionMatrix
     );
 
     return true;

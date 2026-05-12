@@ -31,4 +31,7 @@ public:
 
 private:
     SpriteRenderer m_spriteRenderer;
+
+    // TEST
+    GameObject m_block;
 };
