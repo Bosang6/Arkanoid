@@ -27,6 +27,12 @@ public:
         const DirectX::XMMATRIX& viewMatrix,
         const DirectX::XMMATRIX& projectionMatrix);
 
+    void Draw(
+        ID3D11DeviceContext* context,
+        const std::vector<GameObject>& gameObjects,
+        const DirectX::XMMATRIX& viewMatrix,
+        const DirectX::XMMATRIX& projectionMatrix);
+
 private:
     struct Vertex
     {
@@ -37,6 +43,11 @@ private:
 private:
     bool InitializeQuad(ID3D11Device* device);
     void BindQuad(ID3D11DeviceContext* context);
+    void DrawOne(
+        ID3D11DeviceContext* context,
+        const GameObject& gameObject,
+        const DirectX::XMMATRIX& viewMatrix,
+        const DirectX::XMMATRIX& projectionMatrix);
 
 private:
     SpriteShader m_spriteShader;

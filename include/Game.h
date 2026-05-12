@@ -33,5 +33,5 @@ private:
     SpriteRenderer m_spriteRenderer;
 
     // TEST
-    GameObject m_block;
+    std::vector<GameObject> m_gameObjects;
 };

@@ -161,7 +161,7 @@ void SpriteRenderer::Draw(
 
     XMMATRIX worldMatrix = gameObject.GetTransform().GetWorldMatrix();
 
-    BindQuad(context);
+    //BindQuad(context);
 
     bool result = m_spriteShader.SetParameters(
         context,
@@ -176,6 +176,73 @@ void SpriteRenderer::Draw(
         return;
 
     m_spriteShader.Bind(context);
+
+    context->DrawIndexed(
+        m_indexCount,
+        0,
+        0
+    );
+}
+
+void SpriteRenderer::Draw(
+    ID3D11DeviceContext* context,
+    const std::vector<GameObject>& gameObjects,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix)
+{
+    if (!context)
+        return;
+
+    if (!m_vertexBuffer || !m_indexBuffer)
+        return;
+
+    BindQuad(context);
+    m_spriteShader.Bind(context);
+
+    for (const GameObject& gameObject : gameObjects)
+    {
+        DrawOne(
+            context,
+            gameObject,
+            viewMatrix,
+            projectionMatrix
+        );
+    }
+}
+
+void SpriteRenderer::DrawOne(
+    ID3D11DeviceContext* context,
+    const GameObject& gameObject,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix)
+{
+    if (!gameObject.IsActive())
+        return;
+
+    const Sprite* sprite = gameObject.GetSprite();
+
+    if (!sprite)
+        return;
+
+    ID3D11ShaderResourceView* texture = sprite->GetTexture();
+
+    if (!texture)
+        return;
+
+    XMMATRIX worldMatrix =
+        gameObject.GetTransform().GetWorldMatrix();
+
+    bool result = m_spriteShader.SetParameters(
+        context,
+        worldMatrix,
+        viewMatrix,
+        projectionMatrix,
+        sprite->GetColor(),
+        texture
+    );
+
+    if (!result)
+        return;
 
     context->DrawIndexed(
         m_indexCount,
