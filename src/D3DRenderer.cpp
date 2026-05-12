@@ -1,6 +1,6 @@
 #include "D3DRenderer.h"
 
-bool D3DRenderer::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool D3DRenderer::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -307,19 +307,6 @@ bool D3DRenderer::Initialize(int screenWidth, int screenHeight, bool vsync, HWND
 	// Create the viewport.
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
-	// Setup the projection matrix.
-	fieldOfView = 3.141592654f / 4.0f; //45°
-	screenAspect = (float)screenWidth / (float)screenHeight;
-
-	// Create the projection matrix for 3D rendering.
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	m_worldMatrix = XMMatrixIdentity();
-
-	// Create an orthographic projection matrix for 2D rendering.
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
 	return true;
 }
 
@@ -432,27 +419,6 @@ ID3D11Device* D3DRenderer::GetDevice()
 ID3D11DeviceContext* D3DRenderer::GetDeviceContext()
 {
 	return m_deviceContext;
-}
-
-
-void D3DRenderer::GetProjectionMatrix(XMMATRIX& projectionMatrix)
-{
-	projectionMatrix = m_projectionMatrix;
-	return;
-}
-
-
-void D3DRenderer::GetWorldMatrix(XMMATRIX& worldMatrix)
-{
-	worldMatrix = m_worldMatrix;
-	return;
-}
-
-
-void D3DRenderer::GetOrthoMatrix(XMMATRIX& orthoMatrix)
-{
-	orthoMatrix = m_orthoMatrix;
-	return;
 }
 
 

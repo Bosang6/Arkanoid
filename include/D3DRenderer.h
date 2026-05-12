@@ -14,7 +14,7 @@ public:
 	D3DRenderer(const D3DRenderer&) = delete;
 	~D3DRenderer() = default;
 
-	bool Initialize(int, int, bool, HWND, bool, float, float);
+	bool Initialize(int, int, bool, HWND, bool);
 	void Shutdown();
 
 	void BeginScene(float, float, float, float);
@@ -22,10 +22,6 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
-
-	void GetProjectionMatrix(XMMATRIX&);
-	void GetWorldMatrix(XMMATRIX&);
-	void GetOrthoMatrix(XMMATRIX&);
 
 	void GetVideoCardInfo(char*, int&);
 
@@ -44,8 +40,5 @@ private:
 	ID3D11DepthStencilState* m_depthStencilState = nullptr;
 	ID3D11DepthStencilView* m_depthStencilView = nullptr;
 	ID3D11RasterizerState* m_rasterState = nullptr;
-	XMMATRIX m_projectionMatrix;
-	XMMATRIX m_worldMatrix;
-	XMMATRIX m_orthoMatrix;
 	D3D11_VIEWPORT m_viewport;
 };
