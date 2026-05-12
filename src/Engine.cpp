@@ -1,6 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "Engine.h"
 
 bool Engine::Initialize()
@@ -22,16 +19,28 @@ bool Engine::Initialize()
 	m_Input->Initialize();
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Game = new Game;
-
-	//result = m_Game->Initialize(screenWidth, screenHeight, m_hwnd);
-	//if (!result)
-	//{
-	//	return false;
-	//}
 
 	m_Renderer = new D3DRenderer;
-	result = m_Renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, m_hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, m_hwnd, FULL_SCREEN);
+	if (!result)
+	{
+		return false;
+	}
+
+	m_Camera2D = new Camera2D;
+	m_Camera2D->SetViewportSize(
+		static_cast<float>(screenWidth),
+		static_cast<float>(screenHeight)
+	);
+	m_Camera2D->SetPosition(0.0f, 0.0f);
+	m_Camera2D->SetZoom(1.0f);
+
+
+	m_Game = new Game;
+	result = m_Game->Initialize(
+		m_Renderer->GetDevice(),
+		m_Renderer->GetDeviceContext(),
+		m_hwnd);
 	if (!result)
 	{
 		return false;
@@ -43,13 +52,19 @@ bool Engine::Initialize()
 
 void Engine::Shutdown()
 {
-	// Release the application class object.
-	//if (m_Game)
-	//{
-	//	m_Game->Shutdown();
-	//	delete m_Game;
-	//	m_Game = nullptr;
-	//}
+	//Release the application class object.
+	if (m_Game)
+	{
+		m_Game->Shutdown();
+		delete m_Game;
+		m_Game = nullptr;
+	}
+
+	if (m_Camera2D)
+	{
+		delete m_Camera2D;
+		m_Camera2D = nullptr;
+	}
 
 	// Release the input object.
 	if (m_Input)
@@ -125,12 +140,24 @@ bool Engine::Frame()
 		return false;
 	}
 
-	// Do the frame processing for the application object.
-	//result = m_Game->Frame();
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	result = m_Game->Update(1.0f / 60.0f);
+	if (!result)
+	{
+		return false;
+	}
+	m_Renderer->BeginScene(0.1f, 0.1f, 0.15f, 1.0f);
+
+	result = m_Game->Render(
+		m_Renderer->GetDeviceContext(),
+		m_Camera2D->GetViewMatrix(),
+		m_Camera2D->GetProjectionMatrix());
+
+	if (!result)
+	{
+		return false;
+	}
+
+	m_Renderer->EndScene();
 
 	return true;
 }

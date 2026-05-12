@@ -5,12 +5,10 @@
 #include "Input.h"
 #include "Game.h"
 #include "D3DRenderer.h"
+#include "Camera2D.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.3f;
-
 
 class Engine
 {
@@ -38,6 +36,7 @@ private:
 	Input* m_Input = nullptr;
 	Game* m_Game = nullptr;
 	D3DRenderer* m_Renderer = nullptr;
+	Camera2D* m_Camera2D = nullptr;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
