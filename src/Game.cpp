@@ -40,7 +40,9 @@ bool Game::Initialize(
     if (!blockTexture)
         return false;
 
-    m_block.AddSprite(blockTexture);
+    // 颜色叠加
+    Sprite* s = m_block.AddSprite(blockTexture);
+    s->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 
     return true;
 }
@@ -68,33 +70,6 @@ bool Game::Render(
 {
     if (!context)
         return false;
-
-    /*
-        在屏幕中画一张 PNG。
-
-        x = 100
-        y = 100
-        width = 256
-        height = 256
-
-        如果你的 Camera2D 使用的是：
-        XMMatrixOrthographicOffCenterLH(0, width, height, 0, near, far)
-
-        那么坐标含义就是：
-        左上角是 (0, 0)
-        往右 x 增加
-        往下 y 增加
-    */
-    //m_spriteRenderer.DrawSprite(
-    //    context,
-    //    viewMatrix,
-    //    projectionMatrix,
-    //    "block",
-    //    0.0f,
-    //    0.0f,
-    //    256.0f,
-    //    256.0f
-    //);
 
     m_spriteRenderer.Draw(
         context,

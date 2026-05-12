@@ -81,6 +81,22 @@ bool SpriteShader::Initialize(ID3D11Device* device, const wchar_t* vsFilename, c
     if (FAILED(hr))
         return false;
 
+    D3D11_BUFFER_DESC colorBufferDesc = {};
+    colorBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    colorBufferDesc.ByteWidth = sizeof(ColorBufferType);
+    colorBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    colorBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    colorBufferDesc.MiscFlags = 0;
+    colorBufferDesc.StructureByteStride = 0;
+    result = device->CreateBuffer(
+        &colorBufferDesc,
+        nullptr,
+        m_colorBuffer.GetAddressOf()
+    );
+
+    if (FAILED(result))
+        return false;
+
     // Sampler State
     D3D11_SAMPLER_DESC samplerDesc = {};
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -105,6 +121,7 @@ bool SpriteShader::Initialize(ID3D11Device* device, const wchar_t* vsFilename, c
 void SpriteShader::Shutdown()
 {
     m_samplerState.Reset();
+    m_colorBuffer.Reset();
     m_matrixBuffer.Reset();
     m_inputLayout.Reset();
 }
@@ -123,6 +140,7 @@ bool SpriteShader::SetParameters(
     const XMMATRIX& world,
     const XMMATRIX& view,
     const XMMATRIX& projection,
+    const DirectX::XMFLOAT4& color,
     ID3D11ShaderResourceView* texture)
 {
     D3D11_MAPPED_SUBRESOURCE mappedResource = {};
@@ -149,6 +167,27 @@ bool SpriteShader::SetParameters(
 
     ID3D11Buffer* matrixBuffer = m_matrixBuffer.Get();
     context->VSSetConstantBuffers(0, 1, &matrixBuffer);
+
+    result = context->Map(
+        m_colorBuffer.Get(),
+        0,
+        D3D11_MAP_WRITE_DISCARD,
+        0,
+        &mappedResource
+    );
+
+    if (FAILED(result))
+        return false;
+
+    ColorBufferType* colorPtr =
+        reinterpret_cast<ColorBufferType*>(mappedResource.pData);
+
+    colorPtr->color = color;
+
+    context->Unmap(m_colorBuffer.Get(), 0);
+
+    ID3D11Buffer* colorBuffer = m_colorBuffer.Get();
+    context->PSSetConstantBuffers(0, 1, &colorBuffer);
 
     context->PSSetShaderResources(0, 1, &texture);
 

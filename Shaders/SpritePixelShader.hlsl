@@ -7,7 +7,12 @@ struct PS_INPUT
     float2 texcoord : TEXCOORD;
 };
 
+cbuffer ColorBuffer : register(b0)
+{
+    float4 spriteColor;
+};
+
 float4 PSMain(PS_INPUT input) : SV_TARGET
 {
-    return shaderTexture.Sample(SampleType, input.texcoord);
+    return shaderTexture.Sample(SampleType, input.texcoord) * spriteColor;
 }

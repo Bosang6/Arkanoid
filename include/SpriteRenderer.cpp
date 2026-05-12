@@ -168,6 +168,7 @@ void SpriteRenderer::Draw(
         worldMatrix,
         viewMatrix,
         projectionMatrix,
+        sprite->GetColor(),
         texture
     );
 

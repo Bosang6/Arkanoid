@@ -19,6 +19,7 @@ public:
         const DirectX::XMMATRIX& world,
         const DirectX::XMMATRIX& view,
         const DirectX::XMMATRIX& projection,
+        const DirectX::XMFLOAT4& color,
         ID3D11ShaderResourceView* texture);
 
     void Bind(ID3D11DeviceContext* context);
@@ -32,8 +33,14 @@ private:
         DirectX::XMMATRIX projection;
     };
 
+    struct ColorBufferType
+    {
+        DirectX::XMFLOAT4 color;
+    };
+
 private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
     Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerState;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> m_colorBuffer;
 };
