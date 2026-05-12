@@ -5,7 +5,9 @@
 #include <DirectXMath.h>
 #include <wrl/client.h>
 
+#include "ResourceManager.h"
 #include "SpriteShader.h"
+#include "GameObject.h"
 
 class SpriteRenderer
 {
@@ -19,26 +21,11 @@ public:
 public:
     bool Initialize(ID3D11Device* device, HWND hwnd, const wchar_t* vsFilename, const wchar_t* psFilename);
     void Shutdown();
-
-    void DrawSprite(
+    void Draw(
         ID3D11DeviceContext* context,
+        const GameObject& gameObject,
         const DirectX::XMMATRIX& viewMatrix,
-        const DirectX::XMMATRIX& projectionMatrix,
-        ID3D11ShaderResourceView* texture,
-        float x,
-        float y,
-        float width,
-        float height);
-
-    void DrawSprite(
-        ID3D11DeviceContext* context,
-        const DirectX::XMMATRIX& viewMatrix,
-        const DirectX::XMMATRIX& projectionMatrix,
-        const std::string& textureName,
-        float x,
-        float y,
-        float width,
-        float height);
+        const DirectX::XMMATRIX& projectionMatrix);
 
 private:
     struct Vertex
@@ -49,6 +36,7 @@ private:
 
 private:
     bool InitializeQuad(ID3D11Device* device);
+    void BindQuad(ID3D11DeviceContext* context);
 
 private:
     SpriteShader m_spriteShader;

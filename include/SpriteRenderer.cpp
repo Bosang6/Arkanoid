@@ -1,7 +1,5 @@
 #include "SpriteRenderer.h"
 
-#include "ResourceManager.h"
-
 using namespace DirectX;
 
 bool SpriteRenderer::Initialize(ID3D11Device* device, HWND hwnd, const wchar_t* vsFilename, const wchar_t* psFilename)
@@ -12,7 +10,7 @@ bool SpriteRenderer::Initialize(ID3D11Device* device, HWND hwnd, const wchar_t* 
     if (!InitializeQuad(device))
         return false;
 
-    if (!m_spriteShader.Initialize(device, hwnd, vsFilename, psFilename))
+    if (!m_spriteShader.Initialize(device, vsFilename, psFilename))
         return false;
 
     return true;
@@ -107,24 +105,15 @@ bool SpriteRenderer::InitializeQuad(ID3D11Device* device)
     return true;
 }
 
-void SpriteRenderer::DrawSprite(
-    ID3D11DeviceContext* context,
-    const DirectX::XMMATRIX& viewMatrix,
-    const XMMATRIX& projectionMatrix,
-    ID3D11ShaderResourceView* texture,
-    float x,
-    float y,
-    float width,
-    float height)
+void SpriteRenderer::BindQuad(ID3D11DeviceContext* context)
 {
-    if (!context || !texture)
+    if (!context)
         return;
 
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
 
     ID3D11Buffer* vertexBuffer = m_vertexBuffer.Get();
-    ID3D11Buffer* indexBuffer = m_indexBuffer.Get();
 
     context->IASetVertexBuffers(
         0,
@@ -135,7 +124,7 @@ void SpriteRenderer::DrawSprite(
     );
 
     context->IASetIndexBuffer(
-        indexBuffer,
+        m_indexBuffer.Get(),
         DXGI_FORMAT_R32_UINT,
         0
     );
@@ -143,24 +132,36 @@ void SpriteRenderer::DrawSprite(
     context->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
     );
+}
 
-    /*
-        Quad 本身是 1x1。
+void SpriteRenderer::Draw(
+    ID3D11DeviceContext* context,
+    const GameObject& gameObject,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix)
+{
+    if (!context)
+        return;
 
-        先缩放成 width x height，
-        再移动到 x, y。
+    if (!gameObject.IsActive())
+        return;
 
-        因为我们使用的是：
-        XMMatrixScaling(...) * XMMatrixTranslation(...)
+    const Sprite* sprite = gameObject.GetSprite();
 
-        所以实际效果是：
-        local vertex -> scale -> translate
-    */
-    XMMATRIX worldMatrix =
-        XMMatrixScaling(width, height, 1.0f) *
-        XMMatrixTranslation(x, y, 0.0f);
+    if (!sprite)
+        return;
 
-    m_spriteShader.Bind(context);
+    ID3D11ShaderResourceView* texture = sprite->GetTexture();
+
+    if (!texture)
+        return;
+
+    if (!m_vertexBuffer || !m_indexBuffer)
+        return;
+
+    XMMATRIX worldMatrix = gameObject.GetTransform().GetWorldMatrix();
+
+    BindQuad(context);
 
     bool result = m_spriteShader.SetParameters(
         context,
@@ -173,29 +174,11 @@ void SpriteRenderer::DrawSprite(
     if (!result)
         return;
 
-    context->DrawIndexed(m_indexCount, 0, 0);
-}
+    m_spriteShader.Bind(context);
 
-void SpriteRenderer::DrawSprite(
-    ID3D11DeviceContext* context,
-    const XMMATRIX& viewMatrix,
-    const XMMATRIX& projectionMatrix,
-    const std::string& textureName,
-    float x,
-    float y,
-    float width,
-    float height)
-{
-    ID3D11ShaderResourceView* texture =
-        ResourceManager::GetTextureSRV(textureName);
-    DrawSprite(
-        context,
-        viewMatrix,
-        projectionMatrix,
-        texture,
-        x,
-        y,
-        width,
-        height
+    context->DrawIndexed(
+        m_indexCount,
+        0,
+        0
     );
 }
