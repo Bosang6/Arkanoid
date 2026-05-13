@@ -35,7 +35,7 @@ const Transform2D& GameObject::GetTransform() const
     return m_transform;
 }
 
-Sprite* GameObject::AddSprite(ID3D11ShaderResourceView* texture)
+Sprite* GameObject::AddSprite(Texture* texture)
 {
     m_sprite = std::make_unique<Sprite>();
     m_sprite->SetTexture(texture);

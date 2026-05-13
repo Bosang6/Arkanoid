@@ -229,8 +229,17 @@ void SpriteRenderer::DrawOne(
     if (!texture)
         return;
 
-    XMMATRIX worldMatrix =
+    XMMATRIX sizeMatrix = DirectX::XMMatrixScaling(
+        sprite->GetWidth(),
+        sprite->GetHeight(),
+        1.0f
+    );
+
+    XMMATRIX transformMatrix =
         gameObject.GetTransform().GetWorldMatrix();
+
+    XMMATRIX worldMatrix =
+        sizeMatrix * transformMatrix;
 
     bool result = m_spriteShader.SetParameters(
         context,

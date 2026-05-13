@@ -20,8 +20,15 @@ public:
 
     ID3D11ShaderResourceView* GetShaderResourceView() const;
     ID3D11Resource* GetResource() const;
+    UINT GetWidth() const;
+    UINT GetHeight() const;
+private:
+    void LoadTextureSize();
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Resource> m_texture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureView;
+
+    UINT m_width = 0;
+    UINT m_height = 0;
 };

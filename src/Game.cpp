@@ -29,34 +29,25 @@ bool Game::Initialize(
     // 3. 初始化 GameObject
     GameObject block("Block1");
 
+    Texture* texture = ResourceManager::GetTexture("block");
+
     block.GetTransform().position = { 0.0f, 0.0f };
     block.GetTransform().rotation = 0.0f;
-    block.GetTransform().scale = { 256.0f, 256.0f };
-
-    ID3D11ShaderResourceView* blockTexture =
-        ResourceManager::GetTextureSRV("block");
-
-    if (!blockTexture)
-        return false;
+    block.GetTransform().scale = { 1.0, 1.0 };
 
     // 颜色叠加
-    Sprite* s = block.AddSprite(blockTexture);
+    Sprite* s = block.AddSprite(texture);
     s->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
     m_gameObjects.push_back(std::move(block));
 
     GameObject block1("Block1");
 
-    block1.GetTransform().position = { 257.0f, 0.0f };
-    block1.GetTransform().rotation = 0.0f;
-    block1.GetTransform().scale = { 256.0f, 256.0f };
-
-    blockTexture = ResourceManager::GetTextureSRV("block");
-
-    if (!blockTexture)
-        return false;
+    block1.GetTransform().position = { 129.0f, 0.0f };
+    block1.GetTransform().rotation = 1.0f;
+    block1.GetTransform().scale = { 1, 1 };
 
     // 颜色叠加
-    s = block1.AddSprite(blockTexture);
+    s = block1.AddSprite(texture);
     s->SetColor({ 0.0f, 1.0f, 0.5f, 1.0f });
 
     m_gameObjects.push_back(std::move(block1));

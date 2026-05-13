@@ -30,6 +30,7 @@ public:
     const Transform2D& GetTransform() const;
 
     Sprite* AddSprite(ID3D11ShaderResourceView* texture);
+    Sprite* AddSprite(Texture* texture);
     void RemoveSprite();
 
     Sprite* GetSprite();
