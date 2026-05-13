@@ -33,10 +33,10 @@ bool SpriteRenderer::InitializeQuad(ID3D11Device* device)
 
         顶点位置：
 
-        (0,0) -------- (1,0)
-          |              |
-          |              |
-        (0,1) -------- (1,1)
+        (-0.5, -0.5) --------  (0.5, -0.5)
+              |                  |
+              |                  |
+        (-0.5,  0.5) --------  (0.5,  0.5)
 
         之后绘制不同大小的 Sprite 时，不改顶点数据，
         而是通过 world matrix 做 scale + translation。
@@ -44,16 +44,16 @@ bool SpriteRenderer::InitializeQuad(ID3D11Device* device)
 
     Vertex vertices[4];
 
-    vertices[0].position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    vertices[0].position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
     vertices[0].texcoord = XMFLOAT2(0.0f, 0.0f);
 
-    vertices[1].position = XMFLOAT3(1.0f, 0.0f, 0.0f);
+    vertices[1].position = XMFLOAT3(0.5f, -0.5f, 0.0f);
     vertices[1].texcoord = XMFLOAT2(1.0f, 0.0f);
 
-    vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f);
+    vertices[2].position = XMFLOAT3(0.5f, 0.5f, 0.0f);
     vertices[2].texcoord = XMFLOAT2(1.0f, 1.0f);
 
-    vertices[3].position = XMFLOAT3(0.0f, 1.0f, 0.0f);
+    vertices[3].position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
     vertices[3].texcoord = XMFLOAT2(0.0f, 1.0f);
 
     unsigned int indices[6] =
